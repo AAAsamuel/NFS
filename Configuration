@@ -1,0 +1,74 @@
+Step 1
+
+sudo apt update
+
+sudo apt install nfs-kernel-server
+
+sudo apt update
+
+sudo apt install nfs-common
+
+Step 2 
+
+sudo mkdir /var/nfs/general -p
+
+ls -la /var/nfs/general
+
+sudo chown nobody:nogroup /var/nfs/general
+
+Step 3
+
+sudo nano /etc/exports
+
+#edit /etc/exports
+
+
+/var/nfs/general    203.0.113.24(rw,sync,no_subtree_check)
+
+/home       203.0.113.24(rw,sync,no_root_squash,no_subtree_check)
+
+exit
+
+sudo systemctl restart nfs-kernel-server
+
+Step 4
+
+Sudo ufw status
+
+sudo ufw allow from 203.0.113.24 to any port nfs
+
+sudo ufw status
+
+Step 5
+
+Sudo mkdir -p /nfs/general
+
+Sudo mkdir -p /nfs/home
+
+Sudo mount 203.0.113.0:/var/nfs/general /nfs/general
+
+Sudo mount 203.0.113.0:/home /nfs/home
+
+df -h
+
+Step 6
+
+Sudo touch /nfs/general/general.test
+
+Ls -l /nfs/general/general.test
+
+Sudo touch /nfs/home/home.test
+
+Ls -l /nfs/home/home.test
+
+
+Maintaining mount after reboot
+
+Sudo nano /etc/fstab
+
+#edit /etc/fstab 
+
+203.0.113.0:/var/nfs/general  /nfs/general   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0  0 
+
+203.0.113.0:/home  /nfs/home  nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0
+
